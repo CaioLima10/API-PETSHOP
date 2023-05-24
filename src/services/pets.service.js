@@ -1,71 +1,46 @@
 import PetRepository from '../repositories/pets.repository.js'
-
 class PetService {
-
-  async createById({nome, idade, peso, raca, proprietarioId }) {
-  try {
-    const donoEncontrado = await PetRepository.proprietarioId({ proprietarioId })
+  async create({ nome, idade, peso, raca, proprietarioId }){
     
-    if(donoEncontrado) {
-      throw new Error('Proprietário já existe, cpf já cadastrado!');
-    }
-  } catch (error) {
-    return await PetRepository.create({ nome, idade, peso, raca, proprietarioId})
+    const donoEncontrado = await PetRepository.proprietarioId({ proprietarioId });
     
-  }}
-
-    
-async list() {
-   try {
-    return await PetRepository.list()
-   } catch (error) {
-    throw error
-   }
-}
-
-async listById({ petId }) {
-  try {
-    const result = await PetRepository.listById({ petId })
-
-    if(!result) {
-      throw new Error("Pet não encontrado")
+    if(!donoEncontrado) {
+        throw new Error('ProprietarioId informado não existe!');
     }
     
-    return { proprietario: result}
-  } catch (error) {
-    throw error
-  }
-}
-
-
-  update({nome, idade, peso, raca, petId}) {
-    const indexPet = pets.findIndex(({ id }) => id === petId);
-    
-    if(indexPet === -1) {
-      return {
-        isError: true,
-        message: 'Pet não encontrado!'
-      };
-    };
-
-    pets[indexPet].nome = nome;
-    pets[indexPet].idade = idade;
-    pets[indexPet].peso = peso;
-    pets[indexPet].raca = raca;
+    return await PetRepository.create({ nome, idade, peso, raca, proprietarioId })
   }
 
-  delete({petId}) {
-    const indexPet = pets.findIndex(({ id }) => id === petId);
+  async list() {
+    try {
+      return await PetRepository.list();
+    } catch (error) {
+      throw error
+    }
+  }
 
-    if(indexPet === -1) {
-      return {
-        isError: true,
-        message: 'Pet não encontrado'
-      };
-    };
+  async listById({ petId }) {
+    try {
+      const result = await PetRepository.listById({ petId })
+
+      if(!result) {
+        throw new Error("Pet não encontrado")
+      }
       
-    pets.splice(indexPet, 1);
+      return { proprietario: result}
+    } catch (error) {
+      throw error
+    }
   }
 
+  async update({ nome, idade, peso, raca, petId }) {
+    try {
+      await PetRepository.listById({ petId });
+      return await PetRepository.update({ nome, idade, peso, raca, petId })
+    } catch (error) {
+      throw error
+    }  
+  }
 }
+
 export default new PetService()
