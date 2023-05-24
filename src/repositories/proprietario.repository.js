@@ -57,31 +57,18 @@ class ProprietarioRepository {
     });
   }
 
-  async listByProprietario({  proprietarioId }) {
+  async listByProprietario({ cpf }) {
     return new Promise((resolve, reject) => {
-      this.db.get('SELECT * FROM proprietarios WHERE proprietarioId = ?', proprietarioId, (err, row) => {
+      this.db.get('SELECT cpf FROM proprietarios WHERE cpf = ?', cpf,(err, row) => {
         if(err) {
           reject(err);
         } else {
           resolve(row);
         }
       });
+
     });
   }
-
-  listPetsProprietario({  proprietarioId }){
-    return new Promise ((resolve , reject) => {
-    this.db.all('SELECT * FROM pets WHERE proprietarioId = ? ' , proprietarioId , (err , row) => {
-      if(err){
-        reject(err)
-      }else{
-        resolve(row)
-      }
-    })
-    })
-  }
-
-
 
   async update({ nome, telefone, proprietarioId }) {
     return new Promise((resolve, reject) => {
@@ -92,7 +79,7 @@ class ProprietarioRepository {
           resolve(row)
         }
       })
-    })  
+    })
   }
 
   async delete({ proprietarioId }) {
