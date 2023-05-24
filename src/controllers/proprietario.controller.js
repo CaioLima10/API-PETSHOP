@@ -33,16 +33,16 @@ class ProprietarioController {
     }
   }
 
-  listPetsProprietario(request, response) {
-    const result = ProprietarioService.listPetsProprietario({ 
-      proprietarioId: request.params.id
-    });
+ async listPetsProprietario(request, response) {
+    try {
+      const result = await ProprietarioService.listPetsProprietario({ 
+        proprietarioId: request.params.id
+      });
 
-    if(result?.isError) {
-      return response.status(404).json({ message: result.message });
-    };
-  
-    return response.json(result);
+      return response.json(result)
+    } catch (error) {
+      return response.status(404).json({ message: error.message });
+    }
   }
 
   async updateById(request, response) {
