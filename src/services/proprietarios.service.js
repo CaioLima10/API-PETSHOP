@@ -2,9 +2,9 @@ import ProprietarioRepository from '../repositories/proprietario.repository.js'
 
 class ProprietarioService {
   async create({ nome, cpf, telefone }) {
-    const proprietarioJaCadastrado = await ProprietarioRepository.listByProprietario({ cpf })
+    const proprietarioJaCadastrado = await ProprietarioRepository.listByProprietario({ cpf , telefone })
 
-    if(proprietarioJaCadastrado) {
+    if(!proprietarioJaCadastrado) {
       throw new Error('Proprietário já existe, cpf já cadastrado!');
     }
 
@@ -57,6 +57,13 @@ class ProprietarioService {
   async delete({ proprietarioId }) {
     try {
       await ProprietarioRepository.listById({ proprietarioId })
+
+      const existPets = await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+
+      if(existPets.length > 0 ){
+      return new Error("Por favor deletar primeiro os Pets")
+      }
+      
       return await ProprietarioRepository.delete({ proprietarioId })
     } catch (error) {
       throw error

@@ -89,9 +89,22 @@ async listPetsProprietario({proprietarioId}){
         if(err) {
           reject(err)
         }
-        resolve()
+         resolve
       })
     })
+  }
+
+  async listByProprietario({ cpf }) {
+    return new Promise((resolve, reject) => {
+      this.db.get('SELECT cpf FROM proprietarios WHERE cpf = ?', cpf,(err, row) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(row);
+        }
+      });
+
+    });
   }
 
 }
