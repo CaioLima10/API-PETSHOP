@@ -12,12 +12,12 @@ class PetRepository {
     this.db = new sqlite3.Database(dbPath);
   }
 
-  async create({ nome, idade, peso, raca, proprietarioId }) {
+  async create({proprietarioId , nome, idade, peso, raca }) {
     return new Promise((resolve , reject) => {
   
       const id = randomUUID();
 
-      this.db.run('INSERT INTO pets VALUES(?, ?, ?, ?, ?, ?)', [id, nome, idade, peso, raca, proprietarioId], (err) => {
+      this.db.run('INSERT INTO pets VALUES(?, ?, ?, ?, ?, ?)', [id, proprietarioId, nome, idade, peso, raca], (err) => {
         if (err) {
           reject(err);
         } else {
@@ -54,13 +54,25 @@ class PetRepository {
     });
   };
 
-  async update({ nome, idade, peso, raca, petId }) {
+  async update({nome, idade, peso, raca , petId}) {
     return new Promise((resolve, reject) => {
-      this.db.run('UPDATE pets SET nome = ?, idade = ?, peso = ?, raca = ? WHERE "id" = ?', [nome, idade, peso, raca, petId], (err, row) => {
+      this.db.run('UPDATE pets SET nome = ?, idade = ?, peso = ?, raca = ? WHERE "id" = ?', [ nome, idade, peso, raca , petId], (err, row) => {
         if (err) {
           reject(err)
         }  else {
           resolve(row)
+        }
+      })
+    })
+  }
+
+ async deleteById({petId}){
+    return new Promise((resolve , reject) => {
+      this.db.run('DELETE FROM pets WHERE id = ?' , petId, (err , row) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(row);
         }
       })
     })
