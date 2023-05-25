@@ -32,5 +32,8 @@ export function validatePetMiddlewareUpdate(request, response, next) {
   if(typeof peso !== 'number') {
     return response.status(404).send('"peso" precisa ser number');
   };
+
+  
+
   next();
 }
