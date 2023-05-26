@@ -29,15 +29,21 @@ class ProprietarioService {
     }
   }
 
- async listPetsProprietario({proprietarioId}) {
-
+ async listPetsProprietario({ proprietarioId }) {
     try {
-
       const proprietarioEncontrado = await ProprietarioRepository.listById({ proprietarioId })
 
-      console.log(proprietarioEncontrado)
+      if(!proprietarioEncontrado) {
+        throw new Error("Proprietário não encontrado")
+      }
 
-      return await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+      const areTherePets = await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+
+      if(areTherePets.length === 0) {
+        throw new Error("Proprietário não possui pets")
+      }
+
+      return areTherePets
       
     } catch (error) {
       throw error
@@ -56,7 +62,18 @@ class ProprietarioService {
 
   async delete({ proprietarioId }) {
     try {
-      await ProprietarioRepository.listById({ proprietarioId })
+      const proprietarioEncontrado = await ProprietarioRepository.listById({ proprietarioId })
+
+      if(!proprietarioEncontrado) {
+        throw new Error("proprietário não encontrado")
+      }
+
+      const existPets = await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+      
+      if(existPets.length > 0 ){
+        throw new Error("Por favor deletar primeiro os Pets")
+      }
+      
       return await ProprietarioRepository.delete({ proprietarioId })
     } catch (error) {
       throw error
