@@ -2,9 +2,9 @@ import ProprietarioRepository from '../repositories/proprietario.repository.js'
 
 class ProprietarioService {
   async create({ nome, cpf, telefone }) {
-    const proprietarioJaCadastrado = await ProprietarioRepository.listByProprietario({ cpf , telefone })
+    const proprietarioJaCadastrado = await ProprietarioRepository.listByProprietario({ cpf })
 
-    if(!proprietarioJaCadastrado) {
+    if(proprietarioJaCadastrado) {
       throw new Error('Proprietário já existe, cpf já cadastrado!');
     }
 
@@ -29,15 +29,21 @@ class ProprietarioService {
     }
   }
 
- async listPetsProprietario({proprietarioId}) {
-
+ async listPetsProprietario({ proprietarioId }) {
     try {
-
       const proprietarioEncontrado = await ProprietarioRepository.listById({ proprietarioId })
 
-      console.log(proprietarioEncontrado)
+      if(!proprietarioEncontrado) {
+        throw new Error("Proprietário não encontrado")
+      }
 
-      return await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+      const areTherePets = await ProprietarioRepository.listPetsProprietario({ proprietarioId })
+
+      if(areTherePets.length === 0) {
+        throw new Error("Proprietário não possui pets")
+      }
+
+      return areTherePets
       
     } catch (error) {
       throw error
@@ -56,12 +62,16 @@ class ProprietarioService {
 
   async delete({ proprietarioId }) {
     try {
-      await ProprietarioRepository.listById({ proprietarioId })
+      const proprietarioEncontrado = await ProprietarioRepository.listById({ proprietarioId })
+
+      if(!proprietarioEncontrado) {
+        throw new Error("proprietário não encontrado")
+      }
 
       const existPets = await ProprietarioRepository.listPetsProprietario({ proprietarioId })
-
+      
       if(existPets.length > 0 ){
-      return new Error("Por favor deletar primeiro os Pets")
+        throw new Error("Por favor deletar primeiro os Pets")
       }
       
       return await ProprietarioRepository.delete({ proprietarioId })
