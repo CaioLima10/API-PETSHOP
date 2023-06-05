@@ -1,10 +1,10 @@
-import ProprietarioService from '../services/proprietarios.service.js'
+import OwnerService from '../services/proprietarios.service.js'
 
-class ProprietarioController {
+class OwnerController {
   async create(request, response) {
     try {
-      const { nome, cpf, telefone } = request.body;
-      await ProprietarioService.create({ nome, cpf, telefone });
+      const { name, cpf, telephone } = request.body;
+      await OwnerService.create({ name, cpf, telephone });
 
       return response.status(201).send('Proprietário cadastrado com sucesso');
     } catch (error) {
@@ -14,7 +14,7 @@ class ProprietarioController {
 
   async list(_request, response) {
     try {
-      const result = await ProprietarioService.list();
+      const result = await OwnerService.list();
       return response.json(result);
     } catch (error) {
       return response.status(404).json({ message: error.message });
@@ -23,8 +23,8 @@ class ProprietarioController {
   
   async listById(request, response) {
     try {
-      const result = await ProprietarioService.listById({ 
-        proprietarioId: request.params.id
+      const result = await OwnerService.listById({ 
+        ownerId: request.params.id
       });
 
       return response.json(result);
@@ -33,10 +33,10 @@ class ProprietarioController {
     }
   }
 
- async listPetsProprietario(request, response) {
+ async listPetsOwner(request, response) {
     try {
-      const result = await ProprietarioService.listPetsProprietario({ 
-        proprietarioId: request.params.id
+      const result = await OwnerService.listPetsOwner({ 
+        ownerId: request.params.id
       });
 
       return response.json(result)
@@ -47,10 +47,10 @@ class ProprietarioController {
 
   async updateById(request, response) {
     try {
-      const { nome, telefone } = request.body;
-      const { id: proprietarioId } = request.params;
+      const { name, telephone } = request.body;
+      const { id: ownerId } = request.params;
       
-      await ProprietarioService.update({ nome, telefone, proprietarioId })
+      await OwnerService.update({ name, telephone, ownerId })
       return response.status(204).send()
     } catch (error) {
       return response.status(404).json({ message: error.message });
@@ -59,8 +59,8 @@ class ProprietarioController {
 
   async deleteById(request, response) {
     try {
-      await ProprietarioService.delete({
-        proprietarioId: request.params.id
+      await OwnerService.delete({
+        ownerId: request.params.id
       })
       
       return response.status(204).send();
@@ -70,4 +70,4 @@ class ProprietarioController {
   }
 }
 
-export default new ProprietarioController();
+export default new OwnerController();
