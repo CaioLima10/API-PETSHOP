@@ -3,8 +3,8 @@ import PetService from '../services/pets.service.js';
 class PetController {
   async create(request, response) {
     try {
-      const { nome, idade, peso, raca, proprietarioId } = request.body;
-      await PetService.create({ nome, idade, peso, raca, proprietarioId });
+      const { name, age, Weight, race, ownerId } = request.body;
+      await PetService.create({ name, age, Weight, race, ownerId });
         
       return response.status(201).send('Pet cadastrado com sucesso!');
 
@@ -36,10 +36,10 @@ class PetController {
 
   async updateById(request , response){
     try {
-       const { nome , idade , peso , raca } = request.body
+       const { name , age , weight , race } = request.body
        const { id: petId } = request.params
       
-      await PetService.update({ nome , idade , peso , raca , petId })
+      await PetService.update({ name , age , weight , race , petId })
       return response.status(204).send()
 
     } catch (error) {
