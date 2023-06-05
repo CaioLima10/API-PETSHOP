@@ -8,17 +8,17 @@ const __filename = fileURLToPath(import.meta.url);
 
 const dbPath = path.resolve(__filename ,'..', 'petShop_db')
 
-class ProprietarioRepository {
+class OwnerRepository {
   constructor() {
     this.db = new sqlite3.Database(dbPath);
   }
 
-  async create({ nome, cpf, telefone  }) {
+  async create({ name, cpf, telephone  }) {
     return new Promise((resolve , reject) => {
   
       const id = randomUUID();
 
-      this.db.run('INSERT INTO proprietarios VALUES(?, ?, ?, ?)', [id, nome, cpf, telefone], (err) => {
+      this.db.run('INSERT INTO owners VALUES(?, ?, ?, ?)', [id, name, cpf, telephone], (err) => {
         if (err) {
           reject(err);
         } else {
@@ -31,7 +31,7 @@ class ProprietarioRepository {
 
   async list() {
     return new Promise((resolve, reject) => {
-      this.db.all('SELECT * FROM proprietarios', (err, rows) => {
+      this.db.all('SELECT * FROM owners', (err, rows) => {
         if (err) {
           reject(err);
         } else {
@@ -41,10 +41,10 @@ class ProprietarioRepository {
     });
   }
 
-  async listById({ proprietarioId }) {
+  async listById({ ownerid }) {
     return new Promise((resolve,reject) => {
       
-      this.db.get('SELECT * FROM proprietarios WHERE id = ?', proprietarioId, (err, row) => {
+      this.db.get('SELECT * FROM owners WHERE id = ?', ownerid, (err, row) => {
         if (err) {
           reject(err);
         } else {
@@ -56,9 +56,9 @@ class ProprietarioRepository {
   }
 
 
-async listPetsProprietario({ proprietarioId }){
+async listPetsOwner({ ownerid }){
   return new Promise((resolve , reject) => {
-    this.db.all('SELECT * FROM pets WHERE proprietarioId = ?', proprietarioId , (err , rows) => {
+    this.db.all('SELECT * FROM pets WHERE ownerid = ?', ownerid , (err , rows) => {
       if(err){
         reject(err)
       }else{
@@ -69,9 +69,9 @@ async listPetsProprietario({ proprietarioId }){
 }
 
 
-  async update({ nome, telefone, proprietarioId }) {
+  async update({ name, telephone, ownerid }) {
     return new Promise((resolve, reject) => {
-      this.db.run('UPDATE proprietarios SET nome = ?, telefone = ? WHERE "id" = ?', [nome, telefone, proprietarioId], (err, row) => {
+      this.db.run('UPDATE owners SET name = ?, telephone = ? WHERE "id" = ?', [name, telephone, ownerid], (err, row) => {
         if (err) {
           reject(err)
         }  else {
@@ -81,9 +81,9 @@ async listPetsProprietario({ proprietarioId }){
     })
   }
 
-  async delete({ proprietarioId }) {
+  async delete({ ownerid }) {
     return new Promise((resolve, reject ) => {
-      this.db.run('DELETE FROM proprietarios WHERE id = ?', proprietarioId, (err) => {
+      this.db.run('DELETE FROM owners WHERE id = ?', ownerid, (err) => {
         if(err) {
           reject(err)
         }
@@ -92,9 +92,9 @@ async listPetsProprietario({ proprietarioId }){
     })
   }
 
-  async listByProprietario({ cpf }) {
+  async listByOwner({ cpf }) {
     return new Promise((resolve, reject) => {
-      this.db.get('SELECT cpf FROM proprietarios WHERE cpf = ?', cpf,(err, row) => {
+      this.db.get('SELECT cpf FROM owner WHERE cpf = ?', cpf,(err, row) => {
         if(err) {
           reject(err);
         } else {
@@ -107,4 +107,4 @@ async listPetsProprietario({ proprietarioId }){
 
 }
 
-export default new ProprietarioRepository()
+export default new OwnerRepository()
