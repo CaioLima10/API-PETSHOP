@@ -1,14 +1,14 @@
 import PetsRepository from '../repositories/pets.repository.js'
 class PetService {
-  async create({ nome, idade, peso, raca, proprietarioId }){
+  async create({ name, age, weight, race, ownerId }){
     
-    const donoEncontrado = await PetsRepository.proprietarioId({ proprietarioId });
+    const ownerFound = await PetsRepository.ownerId({ ownerId });
     
-    if(!donoEncontrado) {
+    if(!ownerFound) {
         throw new Error('ProprietarioId informado não existe!');
     }
     
-    return await PetsRepository.create({ nome, idade, peso, raca, proprietarioId })
+    return await PetsRepository.create({ name, age, weight, race, ownerId })
   }
 
   async list() {
@@ -33,10 +33,10 @@ class PetService {
     }
   }
 
-  async update({nome, idade, peso, raca , petId }) {
+  async update({name, age, weight, race , petId }) {
     try {
       await PetsRepository.listById({ petId });
-      return await PetsRepository.update({  nome ,idade, peso, raca , petId })
+      return await PetsRepository.update({  name ,age, weight, race , petId })
     } catch (error) {
       throw error
     }  
